@@ -1,0 +1,14 @@
+This README offers a brief description of the two directories pertaining to pseudosoundings in this study:
+
+    - Pre-Storm Pseudosoundings
+    - Near-Storm Pseudosoundings
+    
+I will not give an in depth description of these directories for two reasons:
+
+    1) They are identical - the only difference is that the Pre-Storm Pseudosoundings use the storm-free simulation to obtain pseudosoundings initialized at t = 0 hrs, while the Near-Storm Pseudosoundings use the simulation with a supercell present, initialized at t = 1 hrs, 30 s. 
+    
+    2) All of the scripts are repeated and described in depth the README.RepeatedScripts subdirectory.
+    
+ONE NOTE: The Near-Storm Pseudosoundings directory has two cases in it: CASE1-Southern Box and CASE2-Southeastern Box, which simply represent two different initial starting locations of the pseudosounding trajectories. 
+
+All Pseudosoundings directories have subdirectories following the organization/format discussed in README.MastersThesis (Scripts, Data, Figures, Figure Builder, and GIFs).

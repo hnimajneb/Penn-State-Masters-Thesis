@@ -1,0 +1,22 @@
+This README offers an in depth description of the "Obtain Instantaneous Data (t = ..s).ipynb" Jupyter notebook, as it appears in multiple 
+folders throughout my "Masters Thesis" directory:
+
+    1) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE1-Southern Box/Scripts/Obtain Instantaneous Data (t = 30s).ipynb
+    
+    2) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE2-Southeastern Box/Scripts/Obtain Instantaneous Data (t = 
+    30s).ipynb
+    
+    3) /storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Obtain Instantaneous Data (t = 0s).ipynb
+    
+    4) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Scripts/Obtain Instantaneous Data (t = 30s).ipynb
+    
+    5) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Sensitivity Analysis/Code/Obtain Instantaneous Data (t = 30s).ipynb
+    
+The notebook is more or less identical in all of the above folders, with the only difference being different input data (storm-free simulation 
+vs. orignal parent simulation).
+
+Since the notebooks are divided into many cells, and there already existing comments above each line of code, additional remarks or 
+clarifications are given below, organized by cell number (from top to bottom of the notebook).
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+

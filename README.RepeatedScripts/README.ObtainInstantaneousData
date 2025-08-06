@@ -1,0 +1,91 @@
+This README offers an in depth description of the "Obtain Instantaneous Data (t = ..s).ipynb" Jupyter notebook, as it appears in 
+multiple folders throughout my "Masters Thesis" directory:
+
+    1) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE1-Southern Box/Scripts/Obtain Instantaneous Data (t = 
+    30s).ipynb
+    
+    2) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE2-Southeastern Box/Scripts/Obtain Instantaneous Data (t 
+    = 30s).ipynb
+    
+    3) /storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Obtain Instantaneous Data (t = 0s).ipynb
+    
+    4) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Scripts/Obtain Instantaneous Data (t = 30s).ipynb
+    
+    5) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Sensitivity Analysis/Code/Obtain Instantaneous Data (t = 
+    30s).ipynb
+    
+The notebook is more or less identical in all of the above folders, with the only difference being different input data (storm-
+free simulation vs. orignal parent simulation).
+
+Since the notebooks are divided into many cells, and there already existing comments above each line of code, additional remarks 
+or clarifications are given below, organized by cell number (from top to bottom of the notebook).
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+GENERAL SUMMARY: Using the starting points of the pseudosounding trajectories, instantaneous vertical profiles are grabbed/computed and saved as .npz files (ex: instantaneous_data.npz), in order to compare the true profiles to the pseudosounding profiles. For the storm-free environment, profiles are grabbed at t = 0hrs. For the parent simulation with a supercell present, soundings are grabbed at the t = 1hr30s -> t = 30s mark, because only the last hour of the simulation was available. 
+
+Cell 1 (C1): Imports python packages used in the script
+
+C2: Creates pathway to appropriate simulation, and saves global variables such as time and the data and grid locations.
+
+C3-C4: Functions computing temperature and dewpoint temperature respective.
+
+    - comp_T_from_Th(pressure, pot_temperature) 
+    
+        input parameters:
+            - pressure - shape: (any, but in my implementation I'm inputing single vertical columns)
+                         units: Pa
+            - potential_temperature - shape: (same as pressure)
+                                      units: degK
+        constants:
+
+            - P_0 = surface pressure = 100000 Pa
+            - R_d = dry gas constant = 287 J/kg/K
+            - c_p = heat capacity of dry air = 1004 J/kg/K
+            - K = Kappa = R_d/c_p
+    
+    - comp_dewpoint (pressure, temperature, specific_humidity)
+        
+        input parameters:
+            - pressure - shape: (any)
+                         units: Pa
+            - temperature - shape: (same as pressure)
+                            units: degK
+            - specific humidity (aka, qv) - shape: (same as pressure)
+                                            units: kg/kg
+        
+        constants:
+            
+            -eps = epsilon = 0.622
+
+C5: Simple visualization of the box where instantaneous soundings will be grabbed, specific background being plotted may vary across notebooks.
+
+C6-C7: Reads in the points saved from the pseudosoundinng trajectories from the "Interpolation Scheme.ipynb" notebook, and finds the horizontal indices in the CM1 grid that are closest to the starting points of the trajectories in order to grab instantaneous profiles.
+
+C8: Uses the maximum and minimum (ni, nj) and the maximum (ni, nj) across the pseudosounding starting points, obtained in C6-C7, to grab the appropriate subset of instantaneous profiles from the parent simulation. Variables grabbed include pressure (Pa), potential temperature (degK), qv (kg/kg), full velocity field (m/s), and vertical vorticity (1/s).
+    
+    - shape of dataset: netCDF -> (nk = 121, nj = nj_max - nj_min, ni = ni_max - ni_min) -> per variable!
+    
+C9: Reshapes the dataset obtained in C8 and resorts it such that it perfectly matches the pseudosounding dataset. In other words, it allows that the instantaneous_data.npz and pseudo_data.npz datasets have the exact dimensionality where each entry/vertical is the pseudo-profile and corresponding instantaneous profile. Makes all resulting computations in other notebooks super easy! No need to worry if you're comparing the wrong instantaneous profile to the wrong pseuodo-profile/starting point.
+
+    - shape of dataset: numpy arrays -> (121, length(nj)*length(ni) = 112225) -> per variable!
+
+C10: Computes T and Td using the functions defined in C3-C4.
+
+C11: Computes parcel temperature profiles using metpy's parcel_profile function. 
+    
+    documenation: https://unidata.github.io/MetPy/latest/api/generated/metpy.calc.parcel_profile.html
+
+C12: Saves all data/variables either computed or obtained in C8-C11, and saves the dataset as an .npz file -> instantaneous_data.npz
+
+C13: Simple check of all of the variable names within the "instantaneous_data.npz" dataset.
+
+C14: Reads in the already saved instantaneous_data.npz dataset and separates it out into corresponding variables.
+
+C15: Calculates CAPE/CIN using wrf-python's cape_3d function, and SRH using metpy's storm_relative_helicity function. 
+
+    CAPE/CIN documentation: https://wrf-python.readthedocs.io/en/latest/user_api/generated/wrf.cape_3d.html
+    
+    SRH documentation: https://unidata.github.io/MetPy/latest/api/generated/metpy.calc.storm_relative_helicity.html
+
+C16: Adds CAPE, CIN, and 0–1-km & 0–3-km SRH to the existing dataset and saves it all again as "instantaneous_data.npz".   

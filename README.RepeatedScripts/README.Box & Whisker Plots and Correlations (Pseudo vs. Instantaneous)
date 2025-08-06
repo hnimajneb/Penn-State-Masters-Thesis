@@ -1,0 +1,52 @@
+This README offers an in depth description of the "Box & Whisker Plots and Correlations (Pseudo vs. Instantaneous).ipynb" Jupyter notebook, as it appears in multiple 
+folders throughout my "Masters Thesis" directory:
+
+    1) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE1-Southern Box/Scripts/Box & Whisker Plots and 
+    Correlations (Pseudo vs. Instantaneous).ipynb
+    
+    2) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE2-Southeastern Box/Scripts/Box & Whisker Plots and 
+    Correlations (Pseudo vs. Instantaneous).ipynb
+    
+    3) /storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Box & Whisker Plots and Correlations (Pseudo vs. 
+    Instantaneous).ipynb
+    
+    4) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Scripts/Box&Whiskers and Correlation Plots for Pseudo vs. 
+    Instant Soundings.ipynb
+
+    5) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Sensitivity Analysis/Code/Box & Whisker Plots and 
+    Correlations (Pseudo vs. Instantaneous).ipynb
+    
+    
+The notebook is more or less identical in all of the above folders. Since the notebooks are divided into many cells, and there already existing comments above each line of code, additional remarks or clarifications are given below, organized by cell number (from top to bottom of the notebook).
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Cell 1 (C1): Imports Python packages used in the script.
+
+C2: Sets the pathway to the appropriate simulation (either no-storm or orignal parent simulation) and saves global variables such as time, the data and grid locations, and defines the additional ascent rate of trajectories as 5 m/s.
+
+C3: Reads in the pseudo dataset ('pseudodata_2_cm1grid.npz') and creates appropriate variables.
+
+C4-C5: Creates Box and Whisker plots of the pseudo data's forecasting parameters and environmental variables.
+
+C6: Creates a correlation coefficient matrix for all of the pseudosounding parameters and environmental variables.
+
+C7: Reads in the instantaneous dataset ('instantaneous_data.npz') and creates appropriate variables.
+
+C8-C9: Creates Box and Whisker plots of the instantaneous data's forecasting parameters and environmental variables.
+
+C10: Creates a correlation coefficient matrix for all of the instantaneous parameters and environmental variables.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+The following cells combine pseudo and instantaneous soundings. The version of this script in the "/storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Box & Whisker Plots and Correlations (Pseudo vs. Instantaneous).ipynb" directory is slightly different, but includes the final version/data in the plots used in the written thesis and defense. So I will describe that one here. The other scripts are similar.
+
+C11: Computes BWD and STP for the pseudo and instantaneous profiles.
+
+C12-C13: Creates Box and Whisker plots of the differences between pseudo and instantaneous soundings parameter values.
+
+C14-C15: Computes general statistics on the for the pseudo and instantaneous forcasting parameters like mean, standard deviation, max, min, and range to mean ratios.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+C16-18: Create horizontal boxplots, showing the distribution of differences in select environmental variables between instantaneous and pseudo profiles, at all vertical levels in the soundings. These figures are saved in the "Figures/" subdirectory of each main folder under the name "diff_{var name}.png".

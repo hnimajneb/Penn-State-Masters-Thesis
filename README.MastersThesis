@@ -1,0 +1,55 @@
+
+This README gives a 10,000 ft overview of how my code/figures are organized for my Master's work.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+GENERAL SUMMARY
+
+My Master's work is organized and consolidated into 4 folders:
+
+    1) Original Variability Study
+    2) Pre-Storm PseudoSoundings
+    3) Near-Storm PseudoSoundings
+    4) Pre-Storm Environment Soundings
+    
+As a refresher, below are the core objectives/questions of the Master's Thesis, and which of the above folders contains the code/figures for each respective objective:
+
+    1) What is the baseline uncertainty of convective forecasting parameters, solely attributable to the turbulent boundary layer?
+        - Original Variability Study
+    
+    2) Are there any significant relationships between coherent turbulent structures in the surface layer (e.g., longitudinal 
+    vorticity streaks and these forcasting parameters?
+        - Original Variability Study
+    
+    3) What are the differences between "pseudosoundings"/"pseudohodographs" (those obtained from rawinsondes) and "true" 
+    soundings/hodographs (instantaneous vertical profiles)?
+        - Pre-Storm Pseudosoundings AND Near-Storm Pseudosoundings AND Original Variability Study
+        
+    4) How much does microscale variability in turbulent environments affect the outcomes of an ensemble of idealized simulations 
+    initialized with horizontally homogeneous environments defined by soundings drawn from these turbulent environments?
+        - Pre-Storm Environment Soundings
+
+Each of the above 4 folders' subdirectories is generally organized into the following folders:
+    
+    1) Scripts
+        - Place for all Jupyter notebooks/code. 
+    2) Data
+        - Place to save data from computations that would take too long (hours) to run every single time I run scripts.
+    3) Figures
+        - Place to store all important figures.
+    4) Figure Builder
+        - Place to store all images/figures that are then combined into GIFs.
+    5) GIFs
+        - Place to store all GIFs that are created using the Figure Builder directory.
+    
+----------------------------------------------------------------------------------------------------------------------------------
+
+IMPORTANT NOTES
+
+The "Original Variability Study" folder contains all of my work within my first year (basically everything up to AMS SLS), and is not as well organized as the other three folders which contain more recent work. I've tried to reformat all of work within this folder to closely resemble the subdirectory format above, but it is slightly different nonetheless. Just a heads up!
+
+There will be additional README files that go more in depth on each of the 4 main folders, as well as READMEs for the code that is used in each folder (lots of repeating functions/scripts!)
+
+I tried to make sure that all of my code I used is well-commented, but if anything is unclear or confusing please feel free to always reach out. 
+
+Email: benstephenhenry@gmail.com

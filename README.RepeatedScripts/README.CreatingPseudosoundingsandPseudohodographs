@@ -1,0 +1,57 @@
+This README offers an in depth description of the "Creating Pseudosoundings and Pseudohodographs.ipynb" Jupyter notebook, as it 
+appears in multiple folders throughout my "Masters Thesis" directory:
+
+    1) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE1-Southern Box/Scripts/Creating Pseudosoundings and 
+    Pseudohodographs.ipynb
+    
+    2) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE2-Southeastern Box/Scripts/Creating Pseudosoundings and 
+    Pseudohodographs.ipynb
+    
+    3) /storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Creating Pseudosoundings and Pseudohodographs.ipynb
+    
+    4) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Scripts/Creating Pseudosoundings and Pseudohodographs.ipynb 
+    -> NOTE: this one is extemely messy, like a sandbox, I will not be desribing this one as it is very different from the rest. 
+    
+    5) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Sensitivity Analysis/Code/Creating Pseudosoundings and 
+    Pseudohodographs.ipynb
+    
+The notebook is more or less identical in all of the above folders, with the only difference being different input data (storm-free simulation vs. orignal parent simulation).
+
+Since the notebooks are divided into many cells, and there already existing comments above each line of code, additional remarks or clarifications are given below, organized by cell number (from top to bottom of the notebook).
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Cell 1 (C1): Imports Python packages used in the script.
+
+C2: Sets the pathway to the appropriate simulation (either no-storm or orignal parent simulation) and saves global variables such as time, the data and grid locations, and defines the additional ascent rate of trajectories as 5 m/s.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+In one particular version of this notebook, there are additional cells that create figures used in the final version of the thesis and defense presentation. This particular version has the following path:
+
+/storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Creating Pseudosoundings and Pseudohodographs.ipynb
+
+The description of those cells are below, with letters next to cell number to in. The rest of the cells will be numbered based on how the rest of the notebooks appear.
+
+C2a-C2b: Creates a figure showing a "lay of the land plot", showing wind speed w/ barbs, potential temperature, and vertical vorticity at the start of the simulation within the 25 km x 25 km box. C2a orients the 3 plots horizontally, and C2b orients them vertically.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+C3: Loads in the pseudosounding dataset (pseudodata_2_cm1grid.npz) and the instantaneous dataset (instantaneous_data.npz) and creates the appropriate variables.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+C3a: Plots a randomly selected pseudo and instantaneous sounding comparison. This figure was used in the final version of the thesis and defense presentation.
+
+C3b: Creates a high resolution GIF of 100 randomly selected pseudo vs. instantaneous soundings. Used in the final version of the thesis and defense presentation.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+C4: Creates a GIF that shows 100 randomly pseudosoundings comparisons, lower quality.
+
+C5: Creates a GIF that shows 100 randomly selected pseudo and instantaneous sounding comparisons.
+
+This is where most of the scripts end! There might be subtle differences across notebooks as mentioned above, but this overarching description should cover the gist of it.
+
+
+

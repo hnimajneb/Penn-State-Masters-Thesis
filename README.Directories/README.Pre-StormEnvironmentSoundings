@@ -1,0 +1,107 @@
+This README offers a deeper dive and description of all the contents and subdirectories within the "Pre-Storm Environment Soundings" directory. This is the portion of my work that is all about the ensemble of 20th-century style simulations, attempting to show the range of outcomes from randomly selected point-soundings from a realistic environment.
+
+Each section below is dedicated to explaining each subdirectory individually. 
+
+---------------------------------------------------------------------------------------------------------------------------------
+The Data subdirectory is organized as follows:
+
+        1) storm_motions.pkl
+            - This Python pickle file stores the storm motions computed at 5 minute intervals for each of the 30 simulations.
+            - source script: SIGTOR vs. WEAKTOR vs. NONTOR Environments.ipynb
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Figure Builder subdirectory is used to create GIFs within my scripts. The figures in this folder are constantly overwritten since it is temporary storage.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Figures subdirectory is empty, as most important figures are within the output of the script cells themselves.
+
+---------------------------------------------------------------------------------------------------------------------------------
+The GIFs subdirectory contains all GIFs pertaining to the ensemble of simulations. There are a few types of GIFs in this folder:
+
+    - Prelim_GIF_{...}.gif: These are animations of single ensemble members showing shaded reflectivity with black vertical 
+    velocity contours (w = 5, 10, 15, .. m/s).
+    
+    - Full_Storm{..}.gif OR grw_Full_Storm{..}.gif: These are animations of single ensemble members showing shaded ground 
+    relative wind with red vertical vorticity contours. The 30 dBZ line at z = 522 m shows the rough outline of the supercell is 
+    plotted as a solid white line. 
+    
+    - qv_Full_Storm{..}.gif: These are animations of single ensemble members showing shaded water vapor mixing ratio with red 
+    vertical vorticity contours. The 30 dBZ line at z = 522 m shows the rough outline of the supercell is plotted as a solid 
+    white line. 
+    
+    - full_ensemble_dbz.gif & full_ensemble_grw.gif: These are animations of the full ensemble showing basic shaded reflectivity 
+    with vertical velocity contours and shaded ground relative wind with vertical vorticity contours, respectively.
+    
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Scripts subdirectory is organized as follows:
+
+    1) Animate Simulations.ipynb
+    
+        - This script creates all the animations described in the GIFs subdirectory above. 
+        
+    2) SIGTOR vs. WEAKTOR vs. NONTOR Environments.ipynb
+    
+        - This script pertains to all plots and analyses involving SIGTOR (EF2+), WEAKTOR (> EF2), and NONTOR simulations. 
+        
+        - IMPORTANT NOTES/WHAT'S IN THIS SCRIPT
+        
+            1) Divides out the simulations into SIGTOR, WEAKTOR, and NONTOR categories for plotting purposes.
+            
+            2) Plots all soundings and forecasting parameters across the entire ensemble into a single figure.
+            
+            3) Does the same as 2), but plots all of the NONTOR, WEAKTOR, and SIGTOR members in 3 separate figures.
+            
+            4) Plots all 30 soundings, zoomed in on the lowest 300 mb of the atmosphere, where the color of each sounding 
+            represents the simulation category.
+            
+            5) Plots scatterplots too see if there's any correlation between certain forecasting parameters and the resulting 
+            peak TLV intensity of simulations.
+            
+            6) Plots deviations in storm motions (scatterplots and kernel density estimation plots) computed at 5-minute 
+            intervals and over the last hour of simulation time to see if there's any pattern between deviations in Bunkers and 
+            times when storms because tornadic/remain nontornadic. 
+            
+            7) Shaded contour plots of certain environmental variables and forecasting parameters at the time instantaneous 
+            soundings were taken, with a scatter plot overlaid showing the locations where each sounding was taken, where the 
+            color of individual dots represents the peak TLV intensity of that respective simulation.
+            
+            8) Timeseries plots showing various variables throughout the length of the simulation, where the colors of the lines 
+            represent the different category of simulations. 
+            
+    3) Tornado Track & Intensity Identification.ipynb
+    
+        - The script pertains to all plots and analyses regarding TLVs and identifying them in the simulations.
+        
+        - IMPORTANT NOTES/WHAT'S IN THIS SCRIPT
+        
+            1) TLVs are identified at 5-minute resolution using the output files of the simulations, and at 30-second resolution 
+            using the CM1 stats file.
+            
+                - The 5-minute resolution TLVs are identified by finding collocated spots of high enough vorticity and ground-
+                relative wind (NOT USED IN FINAL VERSION).
+                
+                - The 30-s resolution TLVs are identified using the minimum surface pressure in the CM1stats file to calculate 
+                estimated wind speeds according to the Burgers-Rott Vortex solution to the Navier-Stokes, and using cyclostrophic 
+                balance.
+                
+                    - As is, the EF-scale thresholds and associated pressure minima created sharp transitions between non-
+                    tornadic times to tornadic times (ex: nothing to EF2+), and as such the EF-scale thresholds were reduced by 
+                    20%, creating a much smoother transition.
+                    
+            2) Timeseries of select variables like vorticity, surface pressure minima, and vertical velocity are plotted across 
+            the entire esemble, with background shading representing times when at least 1 ensemble member is tornadic. Darker 
+            shading means more members are tornadic.
+            
+            3) Timeseries of TLVs intensity across the ensemble are also plotted, with histograms showing the distribution of the 
+            peak TLV intensities achieved by each ensemble member.
+            
+            4) TLV tracks are also plotted, but were too messy and not used in any of the final versions of the thesis or defense 
+            presentation.
+            
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Soundings directory is the location where all the input soundings across the ensemble are stored. There is a script in there, "Data Acquisition.ipynb", that is responsible for generating the input soundings that are randomly selected from the parent environment as .txt files, and saving them in this directory.
+

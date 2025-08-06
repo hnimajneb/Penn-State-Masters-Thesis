@@ -1,0 +1,10 @@
+# Exclude all Data folders recursively
+**/Data/
+
+# Optional: exclude system or temp files
+*.pyc
+__pycache__/
+.DS_Store
+*.log
+
+

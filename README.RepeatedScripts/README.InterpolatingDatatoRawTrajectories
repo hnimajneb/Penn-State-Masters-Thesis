@@ -1,0 +1,132 @@
+This README offers an in depth description of the "Interpolating Data to Raw Trajectories | Interpolating All Data Down to CM1 Grid.ipynb" Jupyter notebook, as it appears in multiple folders throughout my "Masters Thesis" directory:
+
+    1) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE1-Southern Box/Scripts/Interpolating Data to Raw 
+    Trajectories | Interpolating All Data Down to CM1 Grid.ipynb
+    
+    2) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE2-Southeastern Box/Scripts/Interpolating Data to Raw 
+    Trajectories | Interpolating All Data Down to CM1 Grid.ipynb
+    
+    3) /storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Interpolating Data to Raw Trajectories | 
+    Interpolating All Data Down to CM1 Grid.ipynb
+    
+    4) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Scripts/Interpolating Data to Raw Trajectories | 
+    Interpolating All Data Down to CM1 Grid.ipynb
+    
+    5) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Sensitivity Analysis/Code/Interpolating Data to Raw 
+    Trajectories | Interpolating All Data Down to CM1 Grid.ipynb
+    
+The notebook is more or less identical in all of the above folders. Since the notebooks are divided into many cells, and there already existing comments above each line of code, additional remarks or clarifications are given below, organized by cell number (from top to bottom of the notebook).
+
+NOTE: This notebook takes the raw trajectory points and velocity along those points within the "rawtrajectories.npz" , obtained in the "Interpolation Scheme.ipynb" script, and interpolates spatial data onto these trajectories. This data includes all necessary variables needed to construct full soundings along the trajectories. 
+
+After this, all data is either computed or interpolated down to the default CM1 grid for easier comparison with instantaneous soundings.
+
+More details below.
+
+----------------------------------------------------------------------------------------------------------
+
+Cell 1 (C1): Imports Python packages used in the script.
+
+C2-C3: C2 sets the pathway to the appropriate simulation (either no-storm or orignal parent simulation). C3 saves global variables such as time, the data and grid locations, and defines the additional ascent rate of trajectories as 5 m/s.
+
+C4: Grabs additional data/variables from the parent simulation's CM1 files that we will need to interpolate onto the trajectories. Variables include:
+    
+    - uinterp - units: m/s
+    - vinterp - units: m/s 
+    - winterp - units: m/s 
+    - th - units: degK
+    - prs - units: Pa
+    - qv - units: kg/kg
+    - zvort - units: 1/s
+
+C5-C6: C5 Reads in the raw trajectories obtained in the "Interpolation Scheme.ipynb" via the "rawtrajectories.npz" file. Also establishes the "breakpoint" index as discussed in the README.InterpolationScheme to help out with calculations, discarding any indices near the end that are empty. C6 prints the variable names in the "rawtrajectories.npz" file as a sanity check. 
+
+C7: Defines the function responsible for temporal interpolation (master_interpolator_t). This is for instances during the pseudosounding trajectories where we are trying to interpolate in between model output timesteps. This simply uses the nearest model output before and after the current interpolation time, and weighs their data/scalar fields accordingly to best represent the data/scalar field at the current time. Output is returned as a netCDF file.
+
+    ex: data (t = 10 s) = a1*data(t = 0 s) + a2*data(t = 30 s)
+    
+        a1, a2 = weights depending on which dataset is closer to the current 
+        timestep. For example, in the expression above a1 and a2 are 
+        2/3 and 1/3 respectively.
+        
+C8: Defines the function responsible for spatial interpolation (master_interpolator_s). This is performed at every timestep, since the trajectories consistently drift in between established grid points. In this function, spatial interpolation is achieved by creating an interpolation function using scipy.interpolate's RegularGridInterpolator function. This function is constructed using the model grid point locations and the current 3-dimensional field of a chosen variable. In this case, the chosen variables are the additional variables needed to construct full trajectories (th, qv, prs, zvort).
+
+    documentation for RegularGridInterpolator: 
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.RegularGridInterpolator.html
+   
+Once the RegularGridInterpolator function is used to create interpolators for each variable, all the trajectory points at a given timestep are fed into each interpolator function to find scalar/data values at each point.
+
+C9: This cell interpolates th, qv, prs, and zvort onto the trajectories using a for loop to loop through all of the trajectory points.
+
+C10: Adds the above variables to the "rawtrajectories.npz" file and saves it as "interpolation_2_rawtrajectories.npz"
+
+This concludes the code that interpolates data to the raw trajectories, and the code/cells below describe the methods used to interpolate everything down to the CM1 grid/vertical levels.
+
+----------------------------------------------------------------------------------------------------------
+
+C11: Reads in the "interpolation_2_rawtrajectories.npz" file and parses out the data into corresponding variables.
+
+C12: Makes a vertical plot of a randomly selected trajectory and variable to make sure things look okay. The exact variable plotted across all versions of this notebook may vary.
+
+C13: Defines the function used to interpolate the raw trajectory points and data down to the CM1 grid, or the original vertical levels (nk = 121) (interp_to_grid). This function utilizes scipy.interpolate's interp1d function to construct interpolation functions for each variable. Required arguments for this function to work are the desired/target vertical levels (CM1 grid) and then the actual trajectory vertical levels and the associated data. 
+
+    documentation for interp1d: 
+    
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html
+    
+C14: This cell interpolates the raw trajectory data to the CM1 grid levels. Variables include velocity, qv, th, prs, and zvort. 
+
+C15-C17: C15 saves the above variables as a numpy array file, named "pseudodata_2_cm1grid.npz", and C16 just prints all of the variable names in the dataset as a check. C17 reads in this dataset and partitions out the respective variables.
+
+C18: Plots all of the pseudohodographs across the 25 km x 25 km domain.
+
+C19-C20: C19 plots 100 randomly selected pseudohodographs, and C20 creates a GIF out of the 100 randomly selected pseudohodographs.
+
+C21-C22: Reads in the "pseudodata_2_cm1grid.npz" file, creates variables and prints the variable names in the dataset.
+
+C23: Functions computing temperature and dewpoint temperature respective.
+
+    - comp_T_from_Th(pressure, pot_temperature) 
+    
+        input parameters:
+            - pressure - shape: (any, but in my implementation I'm inputing single 
+            vertical columns)
+                         units: Pa
+            - potential_temperature - shape: (same as pressure)
+                                      units: degK
+        constants:
+
+            - P_0 = surface pressure = 100000 Pa
+            - R_d = dry gas constant = 287 J/kg/K
+            - c_p = heat capacity of dry air = 1004 J/kg/K
+            - K = Kappa = R_d/c_p
+    
+    - comp_dewpoint (pressure, temperature, specific_humidity)
+        
+        input parameters:
+            - pressure - shape: (any)
+                         units: Pa
+            - temperature - shape: (same as pressure)
+                            units: degK
+            - specific humidity (aka, qv) - shape: (same as pressure)
+                                            units: kg/kg
+        
+        constants:
+            
+            -eps = epsilon = 0.622
+            
+C24: Computes temperature and dewpoint temperature for all pseudoprofiles, as well as computes the parcel path/temperature profile using metpy's parcel_profile function. 
+    
+    documenation:     https://unidata.github.io/MetPy/latest/api/generated/metpy.calc.parcel_profile.html
+
+C25: Adds temperature, dewpoint, and parcel temperature paths for all pseudotrajectories to the "pseudodata_2_cm1grid.npz" file and saves it.
+
+C26-27: Reads in the "pseudodata_2_cm1grid.npz" file and creates variables.
+
+C28: Calculates CAPE/CIN using wrf-python's cape_3d function, and SRH using metpy's storm_relative_helicity function. 
+
+    CAPE/CIN documentation: https://wrf-python.readthedocs.io/en/latest/user_api/generated/wrf.cape_3d.html
+    
+    SRH documentation: https://unidata.github.io/MetPy/latest/api/generated/metpy.calc.storm_relative_helicity.html
+
+C29: Adds CAPE, CIN, and 0–1-km & 0–3-km SRH to the existing dataset and saves it all again as "pseudodata_2_cm1grid.npz".   

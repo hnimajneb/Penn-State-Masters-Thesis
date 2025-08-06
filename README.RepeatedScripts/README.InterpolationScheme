@@ -1,0 +1,56 @@
+This README offers an in depth description of the "Interpolation Scheme.ipynb" Jupyter notebook, as it appears in multiple 
+folders throughout my "Masters Thesis" directory:
+
+    1) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE1-Southern Box/Scripts/Interpolation Scheme.ipynb
+    
+    2) /storage/work/bsh5393/Masters Thesis/Near-Storm PseudoSoundings/CASE2-Southeastern Box/Scripts/Interpolation Scheme.ipynb
+    
+    3) /storage/work/bsh5393/Masters Thesis/Pre-Storm PseudoSoundings/Scripts/Interpolation Scheme.ipynb
+    
+    4) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Scripts/Interpolation Scheme.ipynb
+    
+    5) /storage/work/bsh5393/Masters Thesis/Original Variability Study/Sensitivity Analysis/Code/Interpolation Scheme.ipynb
+    
+The notebook is more or less identical in all of the above folders. Since the notebooks are divided into many cells, and there already existing comments above each line of code, additional remarks or clarifications are given below, organized by cell number (from top to bottom of the notebook).
+
+NOTE: Trajectory points are computed every 10 seconds along the pseudosounding trajectories. With the parent simulation model output being only every 30 seconds, we need to interpolate in both space and time in order to compute the full trajectories which are both in between timesteps and grid points.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Cell 1 (C1): Imports Python packages used in the script.
+
+C2-C3: C2 sets the pathway to the appropriate simulation (either no-storm or orignal parent simulation). C3 saves global variables such as time, the data and grid locations, and defines the additional ascent rate of trajectories as 5 m/s.
+
+C4-C5: Simple visualization of the box of the starting point of all pseudosounding trajectories, specific background being plotted may vary across notebooks.
+
+C6: Reads in the velocity data from the 2-hour simulation needed for the trajectories scheme. This is achieved by opening each netCDF file (del_time = 30s), and appending the 3-dimensional velocity fields at all the timesteps into a python list object (lists are faster to loop over compared to individually opening netCDF files whenever performing computations!).
+
+C7: Defines the function responsible for temporal interpolation (interp_t). This is for instances during the pseudosounding trajectories where we are trying to interpolate in between model output timesteps. This simply uses the nearest model output before and after the current interpolation time, and weighs their velocity fields accordingly to best represent the velocity field at the current time. Output is returned as a netCDF file.
+
+    ex: data (t = 10 s) = a1*data(t = 0 s) + a2*data(t = 30 s)
+    
+        a1, a2 = weights depending on which dataset is closer to the current 
+        timestep. For example, in the expression above a1 and a2 are 
+        2/3 and 1/3 respectively.
+
+C8: Defines the function responsible for spatial interpolation (interp_s). This is performed at every timestep, since the trajectories consistently drift in between established grid points. In this function, spatial interpolation is achieved by creating an interpolation function using scipy.interpolate's RegularGridInterpolator function. This function is constructed using the model grid point locations and the current 3-dimensional field of a chosen variable. In this case, the chose variables are each of the velocity components individually. There is also a periodic boundary condition within this function that acts to keep trajectories within the model domain if they happen to drift beyond any of the horizontal boundaries.
+
+    documentation for RegularGridInterpolator: 
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.RegularGridInterpolator.html
+   
+Once the RegularGridInterpolator function is used to create interpolators for each variable, all the trajectory points at a given timestep are fed into each interpolator function to find scalar/velocity values at each point.
+
+C9: Defines the function responsible for the 4th-order Runge-Kutta scheme that advances trajectory points in space between the 10s computation intervals, and this is because we can't assume that the velocity fields are entirely constant over intervals of 10s. The Runge-Kutta function also employs interp_t and interp_s in order to incrementally step forward in space over the 10s interval. At every step, there is also a periodic boundary condition within this function that acts to keep trajectories within the model domain if they happen to drift beyond any of the horizontal boundaries. There is also a top boundary condition that exits the function in the event that any of the trajectory points reach the top boundary of the model.
+
+C10: This cell actually performs the trajectory calculations. First few lines allocate storage for the points and the velocity fields along those points. The actual trajectory scheme is accomplished in the for loop. 
+
+First the velocity field is interpolated temporally to the current timestep. Then the velocity field is interpolated spatially to all of the current trajectory points. Once the velocity field is obtained for all of the points, the Runge-Kutta scheme is utilized to move the trajectories along in space for the next 10 seconds. Then the process is continually repeated, and the loop will continue until any of the trajectories hit the top of the boundary, ending the loop for all trajectories. 
+
+C11: This saves the trajectory points, and the velocity field along those points as a numpy array file ("rawtrajectories.npz"). 
+
+It also establishes a "breakpoint", the index where the trajectories loop stopped. This is because the storage for the trajectories is set up with a size of n = 357, representing 3570s of storage for the trajectories. (We know beforehand that the trajectories take about an hour to reach the top of the domain, so the actual size of the initial storage array doesn't matter as long as we don't run out of storage space during the loop, which would kill it prematurely). When the loop breaks early, for example at i = 350, there is 7 additional indices that are empty and need to be discarded.
+
+C12: This cell plots all of the wind profiles/hodographs along all of the trajectories.
+
+C13-end: These cells create visualizations of the trajectories as GIFs. C13 creates a top-down or 2 dimensional view of the trajectories, and C14 creates a 3-dimensional view of the trajectories. These GIFs are saved as "topdowngridtraj.gif" and "3Dgridtraj.gif" in the GIFs folder in each of the 4 main directories of the Master's Thesis. Other cells make single images of the starting and ending point of trajectories, or slightly altered GIFs. These exact cells across all "Interpolation Scheme.ipynb" notebooks. 
+    

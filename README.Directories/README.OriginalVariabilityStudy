@@ -1,0 +1,189 @@
+This README offers a deeper dive and description of all the contents and subdirectories within the "Original Variability Study" directory. This portion of my work is everything within the first year of my master's work. This is the code that pertains to what I presented at AMS SLS. It's older and a little less organized compared to the other main directories that feature more recent work that made the final version of the thesis/defense.
+
+Each section below is dedicated to explaining each subdirectory individually. Source script refers to the Jupyter notebook a dataset comes from with the Scripts subdirectory.
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Data subdirectory is organized as follows:
+
+    1) InterpolationData: this folder is a bit of a mess, given that it was my earlier work, but it contains the original 
+    pseudosounding trajectory data, as well as original GIFs created from this data.
+    
+        1a) FigureBuilder: stores all figures needed to build GIFs, will constantly be overwritten depending on whatever GIF you 
+        are creating within one of the scripts in the directory.
+        
+        1b) GIFs: stores all GIFs created within the Original Variability Study scripts. I won't delete any in case you want to 
+        use them, even if they are crude/preliminary.
+            
+            - All "Prelim_GIF" GIFs are from the very first ensemble of simulations where every storm died because we were using 
+            near-storm pseudosoundings to initialize storms.
+            
+            - There's some random GIFs of pseudosoundings, pseudosoundings compared to instantaneous soundings, and 
+            pseudosounding trajectories.
+        
+        1c) RawTrajectories: this stores all data pertaining to pseudosounding trajectories
+            
+            General Note: There were 351 timesteps along the raw trajectories (351*10 s intervals* = 3510 s for trajectories to 
+            complete). 
+            
+            There are 112,225 points within the 25 x 25 km box of analysis. z_levels refers to the 121 CM1_grid vertical levels
+            
+            - all_raw_interp_data.npz = full dataset of all data interpolated to the raw pseudosounding trajectories (10s 
+            interval)
+                
+                variables within file:
+                
+                interp_points - shape: (timesteps, number of points, (z,y,x) coordinates)
+                                       (351,                 112225,                   3)
+                                units: km
+                interp_u - shape: (timesteps, number of points)
+                           units: m/s
+                interp_v - shape: (timesteps, number of points)
+                           units: m/s
+                interp_w - shape: (timesteps, number of points)
+                           units: m/s
+                interp_zvort - shape: (timesteps, number of points)
+                               units: 1/s
+                interp_th - shape: (timesteps, number of points)
+                            units: degK
+                interp_p - shape: (timesteps, number of points)
+                           units: Pa
+                interp_qv - shape: (timesteps, number of points)
+                            units: kg/kg
+                
+                source script: Box&Whiskers and Correlation Plots for Pseudo vs. Instant Soundings.ipynb
+                
+            - instantaneous_data.npz = instantaneous vertical profiles taken at pseudosounding launchpoints
+                
+                variables within file: 
+                
+                P - shape: (z_levels, number of points)
+                           (121,                112225)
+                    units: Pa
+                T, Th, Td, parc_T - shape: (z_levels, number of points)
+                                    units: degK
+                qv - shape: (z_levels, number of points)
+                     units: kg/kg
+                u, v, w - shape: (z_levels, number of points)
+                          units: m/s
+                zvort - shape: (z_levels, number of points)
+                        units: 1/s
+                CAPE, CIN - shape: (z_levels, number of points)
+                            units: J/kg
+                MLCAPE, MLCIN - shape: (number of points)
+                                units: J/kg
+                SRH1km, SRH3km - shape: (number of points)
+                                 units: m^2/s^2
+                                 
+                source script: Obtain Instantaneous Data (t = 30s).ipynb
+                
+             - pseudo_data.npz = final product of the pseudosounding profiles interpolated to the CM1 vertical grid.
+             
+                variables within file: identical to instantaneous_data.npz
+                
+                source script: Creating PseudoSoundings and PseudoHodographs.ipynb
+             
+             - revised_interp_file.npz = the pseudosounding trajectory locations and horizontal winds. The original raw 
+             trajectories before other scalar variables are interpolated onto them. There are 357 timesteps here, representing 
+             the full array of trajectory points. The loop terminated at the 351st timestep, meaning the upper 6 levels are all 
+             0s/empty, and they are discarded in the other datasets.
+                 
+                variables within file: 
+                 
+                interp_points - shape: (timesteps, number of points, (z,y,x) coordinates)
+                                       (357,                 112225,                   3)
+                                units: km
+                interp_u - shape: (timesteps, number of points)
+                           units: m/s
+                interp_v - shape: (timesteps, number of points)
+                           units: m/s
+                           
+                source script: Interpolation Scheme.ipynb
+
+    2-4) computations25kmx25km(...).nc: These 3 netCDF files store all of the forecasting parameter calculations for both the 
+    pre-storm and near-storm boxes, addressing the 1st and 2nd objective of the thesis. These datasets do not include anything 
+    pertaining to pseudosoundings. The following datasets come from the following scripts in the Scripts folder:
+    
+        computations25kmx25km(t=0hrs).nc -> Variability in Storm Parameters in Near Storm Storm Environments (Computations)
+        (t=0hrs).ipynb
+        
+        computations25kmx25km(t=2hrs).nc -> Variability in Storm Parameters in Near Storm Storm Environments (Computations)
+        (t=2hrs).ipynb
+        
+        computations25kmx25km(t=0hrs)-REVISED4MS.nc -> Variability In Storm Parameters in Near Storm Environments (Plots & 
+        Analysis)(t=0hrs)-Revised for MS.ipynb
+                
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Figures subdirectory doesn't have anything too important within it. It two types of figures:
+
+    1) (....)_outliers.png -> initial pseudosounding and instantaneous sounding boxplots. Retained if you need them for anything
+    
+    2) diff_(....).png -> These are the horizontal boxplots looking at differences between pseudo and instantaneous soundings at 
+    each vertical level to glean out any subtle differences. This was done because we didn't know what was causing the initial 
+    negative CAPE bias and we first suspected it was due to differences at the lowest levels.
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Scripts subdirectory stores all code used within Original Variability Study folder. Since a lot of scripts are reused, only 
+using different data or looking at different times, I have made separate README files for each type of script. The descriptions 
+of scripts below are only for those that were not reused in the other 3 main directories. 
+
+
+    1) Variability in Storm Parameters in Near Storm Storm Environments (Computations)(t=..hrs).ipynb
+    
+        - These scripts compute CAPE, CIN, 0–1-km and 0–3-km SRH, and grabs vertical winds at z = 7.5, 522 m for both the pre-
+        storm and near-storm environment and saves them as netCDF files in the Data folder.
+        
+        - Important Notes:
+            
+            1) CAPE/CIN is computed using wrf-python's "wrf.cape_3d(..)" function, because it was able to compute CAPE/CIN at 
+            every level on a 3 dimensional grid. Metpy was initially attempted to be used, but Metpy only works for single 
+            columns and computing 112,225 profiles in parallel would take days!
+            
+            documentation: https://wrf-python.readthedocs.io/en/latest/user_api/generated/wrf.cape_3d.html
+            
+            2) 0–1-km and 0–3-km SRH were computed using wrf-python's "wrf.srhel(...)" function for the same reasons above.
+            
+            documentation: https://wrf-python.readthedocs.io/en/latest/user_api/generated/wrf.srhel.html
+            
+            3) Vertical winds at z = 7.5, 522 m are simply grabbed from the netCDF files of the parent simulation. 
+    
+    2) Variability in Storm Parameters in Near Storm Storm Environments (Plots & Analysis)(t=..hrs).ipynb 
+        
+        - These scripts create spatial plots and boxplots using the netCDF files created in the above scripts. In addition to 
+        this, these scripts also contain the following:
+        
+            1) Computes ground-relative wind and grabs vertical vorticity, qv, Th, P, and T at z = 7.5 m as additional variables 
+            (These are are extremely quick to grab and don't need to be pre-computed and saved like the script above).
+            
+            2) Computes an average of the forecasting parameters for an "Apples to Apples Comparison". This was simply to compare 
+            my values to those found in Markwoski 2020, since different methods/functions are used to calculate CAPE, CIN, SRH, 
+            etc.
+            
+            3) Creates crude boxplots of the all parameters/values.
+            
+            4) Creates the intial correlation coefficient matrices.
+            
+            5) Creates the initial hodograph variability plots.
+            
+            6) Computes and plots Bunkers storm motion vector at every point in the 25km x 25km box.
+            
+        - Important Notes:
+        
+            1) These two scripts were the older version of plots, that were not really used in any final product. Only retained 
+            for archiving purposes.
+            
+    *3) Variability In Storm Parameters in Near Storm Environments (Plots & Analysis)(t=0hrs)-Revised for MS.ipynb*
+    
+        - This script is a more refined version of the two scripts above, in which most of the variability plots in the written 
+        thesis and defense originate from. This is the *MOST IMPORTANT* script out of the ones mentioned above if you are looking 
+        for the plots used in the final versions of this work. Other than that, it is identical to the two scripts mentioned 
+        above.
+        
+---------------------------------------------------------------------------------------------------------------------------------
+
+The Sensitivity Analysis subdirectory is not important. It houses one of the first pseudosounding trajectories cases where the 
+initial launch points were moved to see if the negative CAPE bias persisted (this was still in the parent simulation where the 
+supercell was present). There's no need to use any of the code or figures in it. The Near-Storm Pseudosoundings folder contains 
+the more important sensitivity analyses to moving the initial launch coordinates. 
+
