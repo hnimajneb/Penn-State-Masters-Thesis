@@ -17,16 +17,13 @@ As a refresher, below are the core objectives/questions of the Master's Thesis, 
     1) What is the baseline uncertainty of convective forecasting parameters, solely attributable to the turbulent boundary layer?
         - Original Variability Study
     
-    2) Are there any significant relationships between coherent turbulent structures in the surface layer (e.g., longitudinal 
-    vorticity streaks and these forcasting parameters?
+    2) Are there any significant relationships between coherent turbulent structures in the surface layer (e.g., longitudinal vorticity streaks and these forcasting parameters?
         - Original Variability Study
     
-    3) What are the differences between "pseudosoundings"/"pseudohodographs" (those obtained from rawinsondes) and "true" 
-    soundings/hodographs (instantaneous vertical profiles)?
+    3) What are the differences between "pseudosoundings"/"pseudohodographs" (those obtained from rawinsondes) and "true" soundings/hodographs (instantaneous vertical profiles)?
         - Pre-Storm Pseudosoundings AND Near-Storm Pseudosoundings AND Original Variability Study
         
-    4) How much does microscale variability in turbulent environments affect the outcomes of an ensemble of idealized simulations 
-    initialized with horizontally homogeneous environments defined by soundings drawn from these turbulent environments?
+    4) How much does microscale variability in turbulent environments affect the outcomes of an ensemble of idealized simulations initialized with horizontally homogeneous environments defined by soundings drawn from these turbulent environments?
         - Pre-Storm Environment Soundings
 
 Each of the above 4 folders' subdirectories is generally organized into the following folders:
